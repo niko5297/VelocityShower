@@ -15,12 +15,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.io.IOException;
 import java.util.UUID;
 
-public class CommunicationsActivity extends AppCompatActivity {
+public abstract class CommunicationsActivity extends AppCompatActivity {
 
+    public BluetoothSocket mBluetoothSocket = null;
 
     private String mDeviceAddress;
     private boolean mConnected = true;
-    private BluetoothSocket mBluetoothSocket = null;
     private static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     //TODO: Add Lottieanimation
@@ -49,8 +49,10 @@ public class CommunicationsActivity extends AppCompatActivity {
         disconnectBluetoothDevice();
     }
 
+    //region AsyncTask
+
     @SuppressLint("StaticFieldLeak")
-    private AsyncTask<Void, Void, Void> messageListener = new AsyncTask<Void, Void, Void>() {
+    public AsyncTask<Void, Void, Void> messageListener = new AsyncTask<Void, Void, Void>() {
 
         @Override
         protected void onPreExecute() {
@@ -92,6 +94,10 @@ public class CommunicationsActivity extends AppCompatActivity {
         }
     };
 
+    //endregion
+
+    //region Support methods
+
     private void disconnectBluetoothDevice() {
         if (mBluetoothSocket!=null) //If the btSocket is busy
         {
@@ -109,6 +115,52 @@ public class CommunicationsActivity extends AppCompatActivity {
         finish();
     }
 
+    //endregion
+
+    //region Public methods
+
+    public void write(byte b) {
+
+        try {
+            mBluetoothSocket.getOutputStream().write((int)b);
+        }
+        catch (IOException e) {
+            Toast.makeText(this, "ERROR: Could not write bytes: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public int read() {
+
+        int readInput = -1;
+
+        try {
+            readInput = mBluetoothSocket.getInputStream().read();
+        }
+        catch (IOException e) {
+            Toast.makeText(this, "ERROR: Could not read bytes: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
+        return readInput;
+    }
+
+    public int available() {
+
+        int availableInput = 0;
+
+        try {
+            availableInput = mBluetoothSocket.getInputStream().available();
+        }
+        catch (IOException e) {
+            Toast.makeText(this, "ERROR: Could not find any available bytes: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
+        return availableInput;
+    }
+
+    //endregion
+
+    //region Getters
+
     public String getmDeviceAddress() {
         return mDeviceAddress;
     }
@@ -116,4 +168,6 @@ public class CommunicationsActivity extends AppCompatActivity {
     public BluetoothSocket getmBluetoothSocket() {
         return mBluetoothSocket;
     }
+
+    //endregion
 }
