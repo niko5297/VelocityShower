@@ -31,6 +31,8 @@ public class MyCommunicationsActivity extends CommunicationsActivity {
         mBluetoothSocket = getmBluetoothSocket();
         mDeviceAddress = getmDeviceAddress();
 
+        velocityTextView = findViewById(R.id.velocityFromServer);
+
         readInputFromServer();
     }
 
