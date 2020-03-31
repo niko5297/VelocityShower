@@ -11,6 +11,10 @@ public class MyCommunicationsActivity extends CommunicationsActivity {
     private String velocityFromServer;
 
 
+    //TODO: Få data via nedenstående metode og ændret textviewet ud fra det
+
+    //TODO: Lav layout
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 

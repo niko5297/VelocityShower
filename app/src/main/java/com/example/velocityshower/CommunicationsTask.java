@@ -21,6 +21,8 @@ public class CommunicationsTask extends AsyncTask<Void, Void, Void> {
 
     //TODO: Add Lottieanimation
 
+    //TODO: Samle Communicationstask og Activity og lav seperat Asynctask
+
     //UUID for the connection of the devices
     private static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
