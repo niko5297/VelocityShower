@@ -53,16 +53,13 @@ public class MyCommunicationsActivity extends CommunicationsActivity {
     private void readInputFromServer() {
         while (available() > 0) {
 
-            char c = (char) read();
-
+            velocityFromServer += (char) read();
 
             if (velocityFromServer.length() > 0) {
                 velocityTextView.setText(velocityFromServer);
+                velocityFromServer = "";
                 }
 
-            else {
-                velocityFromServer += c;
-            }
         }
     }
 
