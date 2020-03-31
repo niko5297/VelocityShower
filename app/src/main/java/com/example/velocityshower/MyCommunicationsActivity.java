@@ -9,6 +9,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PersistableBundle;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -34,6 +35,7 @@ public class MyCommunicationsActivity extends AppCompatActivity {
     private static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
 
+
     //TODO: Få data via nedenstående metode og ændret textviewet ud fra det
 
     //TODO: Lav layout
@@ -57,32 +59,37 @@ public class MyCommunicationsActivity extends AppCompatActivity {
     }
     //region Support methods
 
-    private void readInputFromServer() {
-        System.out.println("Entering while loop");
-        while (true) {
+    private Runnable readInputFromServer() {
+        return new Runnable()
+        {
+            public void run()
+            {
+                System.out.println("Entering while loop");
+                    if (available()>0) {
 
-            if (available()>0) {
+                        char c = (char) read();
 
-                char c = (char) read();
+                        System.out.println("String from server: " + velocityFromServer);
 
-                System.out.println("String from server: " + velocityFromServer);
+                        if (velocityFromServer.length() > 0) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    velocityTextView.setText(velocityFromServer);
 
-                if (velocityFromServer.length() > 0) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            velocityTextView.setText(velocityFromServer);
+                                }
+                            });
+                            velocityFromServer = "";
                         }
-                    });
-                    velocityFromServer = "";
-                }
-                else {
-                    velocityFromServer += c;
-                }
-            }
+                        else {
+                            velocityFromServer += c;
+                        }
+                    }
 
+                }
+            };
         }
-    }
+
 
     //endregion
 
@@ -132,7 +139,9 @@ public class MyCommunicationsActivity extends AppCompatActivity {
             }
             else {
                 Toast.makeText(MyCommunicationsActivity.this, "Connected", Toast.LENGTH_SHORT).show();
-                readInputFromServer();
+                Handler handler_spend_time;
+                handler_spend_time = new Handler();
+                handler_spend_time.postDelayed(readInputFromServer(), 1000);
             }
 
         }
