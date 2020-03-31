@@ -51,9 +51,12 @@ public class MyCommunicationsActivity extends CommunicationsActivity {
     //region Support methods
 
     private void readInputFromServer() {
+        System.out.println("Entering while loop");
         while (available() > 0) {
 
             velocityFromServer += (char) read();
+
+            System.out.println("String from server: " + velocityFromServer);
 
             if (velocityFromServer.length() > 0) {
                 velocityTextView.setText(velocityFromServer);
@@ -61,6 +64,7 @@ public class MyCommunicationsActivity extends CommunicationsActivity {
                 }
 
         }
+        System.out.println("Exiting while loop");
     }
 
     //endregion
