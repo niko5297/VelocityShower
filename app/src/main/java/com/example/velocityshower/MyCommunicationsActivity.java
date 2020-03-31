@@ -4,10 +4,13 @@ package com.example.velocityshower;
 
 import android.bluetooth.BluetoothSocket;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 
 import java.io.IOException;
 
@@ -28,10 +31,14 @@ public class MyCommunicationsActivity extends CommunicationsActivity {
 
         super.onCreate(savedInstanceState);
 
+        velocityTextView = findViewById(R.id.velocityFromServer);
+    }
+
+    @Override
+    public void onPostCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+
         mBluetoothSocket = getmBluetoothSocket();
         mDeviceAddress = getmDeviceAddress();
-
-        velocityTextView = findViewById(R.id.velocityFromServer);
 
         readInputFromServer();
     }
