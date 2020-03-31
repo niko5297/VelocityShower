@@ -65,13 +65,16 @@ public class MyCommunicationsActivity extends AppCompatActivity {
 
             if (available()>0) {
 
-                velocityFromServer += (char) read();
+                char c = (char) read();
 
                 System.out.println("String from server: " + velocityFromServer);
 
                 if (velocityFromServer.length() > 0) {
                     velocityTextView.setText(velocityFromServer);
                     velocityFromServer = "";
+                }
+                else {
+                    velocityFromServer += c;
                 }
             }
 
