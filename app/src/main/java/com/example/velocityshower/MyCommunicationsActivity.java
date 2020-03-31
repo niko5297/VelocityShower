@@ -55,13 +55,12 @@ public class MyCommunicationsActivity extends CommunicationsActivity {
 
             char c = (char) read();
 
-            if (c == '.') {
 
-                if (velocityFromServer.length() > 0) {
-                    velocityTextView.setText(velocityFromServer);
-                    velocityFromServer = "";
+            if (velocityFromServer.length() > 0) {
+                velocityTextView.setText(velocityFromServer);
                 }
-            } else {
+
+            else {
                 velocityFromServer += c;
             }
         }
