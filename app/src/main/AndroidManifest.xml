@@ -11,6 +11,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"></application>
+        android:theme="@style/AppTheme">
+
+        <activity android:name=".CommunicationsActivity"></activity>
+        <activity android:name=".DeviceListActivity"></activity>
+        <activity android:name=".MyCommunicationsActivity"></activity>
+
+    </application>
+
 
 </manifest>
