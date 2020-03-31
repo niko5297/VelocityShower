@@ -17,8 +17,6 @@ import java.io.IOException;
 public class MyCommunicationsActivity extends CommunicationsActivity {
 
     private String velocityFromServer = "";
-    private String mDeviceAddress;
-    private BluetoothSocket mBluetoothSocket;
     private TextView velocityTextView;
     private ImageView speedSign;
 
@@ -32,13 +30,6 @@ public class MyCommunicationsActivity extends CommunicationsActivity {
         super.onCreate(savedInstanceState);
 
         velocityTextView = findViewById(R.id.velocityFromServer);
-    }
-
-    @Override
-    public void onPostCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-
-        mBluetoothSocket = getmBluetoothSocket();
-        mDeviceAddress = getmDeviceAddress();
 
         readInputFromServer();
     }
