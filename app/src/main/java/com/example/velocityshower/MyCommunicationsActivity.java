@@ -27,6 +27,7 @@ public class MyCommunicationsActivity extends AppCompatActivity {
     private String velocityFromServer = "";
     private TextView velocityTextView;
     private ImageView speedSign;
+    private Handler handler;
 
     public BluetoothSocket mBluetoothSocket = null;
 
@@ -53,21 +54,22 @@ public class MyCommunicationsActivity extends AppCompatActivity {
         Intent newint = getIntent();
         mDeviceAddress = newint.getStringExtra(DeviceListActivity.EXTRA_ADDRESS);
 
+        this.handler = new Handler();
+
         // Create a connection to this device by running asynctask
         messageListener.execute();
 
     }
     //region Support methods
 
-    private Runnable readInputFromServer() {
-        return new Runnable()
-        {
+    private final Runnable readInputFromServer = new Runnable() {
             public void run()
             {
                 System.out.println("Entering while loop");
                     if (available()>0) {
 
                         char c = (char) read();
+                        velocityFromServer += c;
 
                         System.out.println("String from server: " + velocityFromServer);
 
@@ -81,14 +83,10 @@ public class MyCommunicationsActivity extends AppCompatActivity {
                             });
                             velocityFromServer = "";
                         }
-                        else {
-                            velocityFromServer += c;
-                        }
                     }
 
                 }
             };
-        }
 
 
     //endregion
@@ -139,9 +137,7 @@ public class MyCommunicationsActivity extends AppCompatActivity {
             }
             else {
                 Toast.makeText(MyCommunicationsActivity.this, "Connected", Toast.LENGTH_SHORT).show();
-                Handler handler_spend_time;
-                handler_spend_time = new Handler();
-                handler_spend_time.postDelayed(readInputFromServer(), 1000);
+                handler.postDelayed(readInputFromServer, 1000);
             }
 
         }
