@@ -47,8 +47,6 @@ public class MyCommunicationsActivity extends AppCompatActivity {
 
         velocityTextView = findViewById(R.id.velocityFromServer);
 
-
-
         // Retrieve the address of the bluetooth device from the BluetoothListDeviceActivity
         Intent newint = getIntent();
         mDeviceAddress = newint.getStringExtra(DeviceListActivity.EXTRA_ADDRESS);
@@ -70,7 +68,12 @@ public class MyCommunicationsActivity extends AppCompatActivity {
                 System.out.println("String from server: " + velocityFromServer);
 
                 if (velocityFromServer.length() > 0) {
-                    velocityTextView.setText(velocityFromServer);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            velocityTextView.setText(velocityFromServer);
+                        }
+                    });
                     velocityFromServer = "";
                 }
                 else {
