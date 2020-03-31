@@ -61,19 +61,21 @@ public class MyCommunicationsActivity extends AppCompatActivity {
 
     private void readInputFromServer() {
         System.out.println("Entering while loop");
-        while (available() > 0) {
+        while (true) {
 
-            velocityFromServer += (char) read();
+            if (available()>0) {
 
-            System.out.println("String from server: " + velocityFromServer);
+                velocityFromServer += (char) read();
 
-            if (velocityFromServer.length() > 0) {
-                velocityTextView.setText(velocityFromServer);
-                velocityFromServer = "";
+                System.out.println("String from server: " + velocityFromServer);
+
+                if (velocityFromServer.length() > 0) {
+                    velocityTextView.setText(velocityFromServer);
+                    velocityFromServer = "";
                 }
+            }
 
         }
-        System.out.println("Exiting while loop");
     }
 
     //endregion
