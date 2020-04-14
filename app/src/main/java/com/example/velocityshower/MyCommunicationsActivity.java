@@ -24,7 +24,10 @@ import java.util.UUID;
 
 public class MyCommunicationsActivity extends AppCompatActivity {
 
+    //region Fields
+
     private String velocityFromServer = "";
+    private String speedLimitFromServer = "";
     private TextView velocityTextView;
     private ImageView speedSign;
     private Handler handler;
@@ -35,11 +38,13 @@ public class MyCommunicationsActivity extends AppCompatActivity {
     private boolean mConnected = true;
     private static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
-
+    //endregion
 
     //TODO: Få data via nedenstående metode og ændret textviewet ud fra det
 
     //TODO: Lav layout
+
+    //region Lifecycle
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +54,7 @@ public class MyCommunicationsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_communications);
 
         velocityTextView = findViewById(R.id.velocityFromServer);
+        speedSign = findViewById(R.id.speedSign);
 
         // Retrieve the address of the bluetooth device from the BluetoothListDeviceActivity
         Intent newint = getIntent();
@@ -60,16 +66,27 @@ public class MyCommunicationsActivity extends AppCompatActivity {
         messageListener.execute();
 
     }
-    //region Support methods
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        disconnectBluetoothDevice();
+    }
+
+    //endregion
+
+    //region Runnable methods
 
     private final Runnable readInputFromServer = new Runnable() {
             public void run()
             {
                 System.out.println("Entering while loop");
-                    if (available()>0) {
+                    while (available()>0){
 
                         char c = (char) read();
                         velocityFromServer += c;
+
+                        System.out.println("Available: " + available());
 
                         System.out.println("String from server: " + velocityFromServer);
 
@@ -78,24 +95,19 @@ public class MyCommunicationsActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     velocityTextView.setText(velocityFromServer);
-
+                                    speedSign.setImageResource(SpeedSignEnum.SPEED_50.getImage());
                                 }
                             });
                             velocityFromServer = "";
                         }
                     }
+                    MyCommunicationsActivity.this.handler.postDelayed(readInputFromServer,1000);
 
                 }
             };
 
 
     //endregion
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        disconnectBluetoothDevice();
-    }
 
     //region AsyncTask
 
