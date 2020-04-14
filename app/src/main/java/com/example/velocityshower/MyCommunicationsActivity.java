@@ -44,6 +44,8 @@ public class MyCommunicationsActivity extends AppCompatActivity {
 
     //TODO: Lav layout
 
+    //TODO: Lav lottie animation mens den loader
+
     //region Lifecycle
 
     @Override
@@ -86,11 +88,9 @@ public class MyCommunicationsActivity extends AppCompatActivity {
                         char c = (char) read();
                         velocityFromServer += c;
 
-                        System.out.println("Available: " + available());
-
                         System.out.println("String from server: " + velocityFromServer);
 
-                        if (velocityFromServer.length() > 0) {
+                        if (velocityFromServer.length() > 0 && available() == 0) {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -149,7 +149,7 @@ public class MyCommunicationsActivity extends AppCompatActivity {
             }
             else {
                 Toast.makeText(MyCommunicationsActivity.this, "Connected", Toast.LENGTH_SHORT).show();
-                handler.postDelayed(readInputFromServer, 1000);
+                handler.post(readInputFromServer);
             }
 
         }
