@@ -10,24 +10,23 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.PersistableBundle;
+import android.speech.tts.TextToSpeech;
 import android.widget.ImageView;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.UUID;
 
-public class MyCommunicationsActivity extends AppCompatActivity {
+public class MyCommunicationsActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
     //region Fields
 
-    private String velocityFromServer = "";
-    private String speedLimitFromServer = "";
+    private String responseFromServer = "";
+    private int speedLimit = 0;
     private TextView velocityTextView;
     private ImageView speedSign;
     private Handler handler;
@@ -38,13 +37,13 @@ public class MyCommunicationsActivity extends AppCompatActivity {
     private boolean mConnected = true;
     private static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
+    private TextToSpeech textToSpeech = new TextToSpeech(this, this);
+
     //endregion
 
-    //TODO: Få data via nedenstående metode og ændret textviewet ud fra det
-
-    //TODO: Lav layout
-
     //TODO: Lav lottie animation mens den loader
+
+    //FIXME: s50 betyder at hastighedsgrænsen er 50 km/t
 
     //region Lifecycle
 
@@ -86,19 +85,15 @@ public class MyCommunicationsActivity extends AppCompatActivity {
                     while (available()>0){
 
                         char c = (char) read();
-                        velocityFromServer += c;
+                        responseFromServer += c;
 
-                        System.out.println("String from server: " + velocityFromServer);
+                        System.out.println("String from server: " + responseFromServer);
 
-                        if (velocityFromServer.length() > 0 && available() == 0) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    velocityTextView.setText(velocityFromServer);
-                                    speedSign.setImageResource(SpeedSignEnum.SPEED_50.getImage());
-                                }
-                            });
-                            velocityFromServer = "";
+                        if (responseFromServer.length() > 0 && available() == 0) {
+                            readSpeed();
+                        }
+                        else if (responseFromServer.toLowerCase().contains("s") && available() == 0){
+                            readSpeedSign();
                         }
                     }
                     MyCommunicationsActivity.this.handler.postDelayed(readInputFromServer,1000);
@@ -160,7 +155,7 @@ public class MyCommunicationsActivity extends AppCompatActivity {
     //region Support methods
 
     private void disconnectBluetoothDevice() {
-        if (mBluetoothSocket!=null) //If the btSocket is busy
+        if (mBluetoothSocket!=null) //If the btSocket exists and is currently taken
         {
             try  {
                 mBluetoothSocket.close(); //close connection
@@ -174,6 +169,68 @@ public class MyCommunicationsActivity extends AppCompatActivity {
 
         //Finish activity when disconnected
         finish();
+    }
+
+    private void readSpeedSign(){
+        //Remove s from the string since it identifies that it is a speed sign
+        String localResponse = responseFromServer.toLowerCase().replace("s","");
+
+
+        //Switch case from the value
+        switch (localResponse){
+
+            //Set imageresource accordingly
+            case "50":
+                speedSign.setImageResource(SpeedSignEnum.SPEED_50.getImage());
+                speedLimit = 50;
+                break;
+
+            case "60":
+                speedSign.setImageResource(SpeedSignEnum.SPEED_60.getImage());
+                speedLimit = 60;
+                break;
+
+            case "70":
+                speedSign.setImageResource(SpeedSignEnum.SPEED_70.getImage());
+                speedLimit = 70;
+                break;
+
+            case "80":
+                speedSign.setImageResource(SpeedSignEnum.SPEED_80.getImage());
+                speedLimit = 80;
+                break;
+
+            default:
+                speedSign.setImageResource(SpeedSignEnum.SPEED_NONE.getImage());
+                speedLimit = 0;
+                System.out.println("WARNING: Found no speedsign for that speed. Setting speedlimit to 0!");
+
+        }
+
+        //Reset responseFromServer string to nothing
+        responseFromServer = "";
+    }
+
+    private void readSpeed(){
+
+        //Change text to speed using the UIThread
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                velocityTextView.setText(responseFromServer);
+
+            }
+        });
+
+        //Check if the speed is higher than the speed limit
+        if (Integer.parseInt(responseFromServer)>speedLimit && speedLimit!= 0){ //if speedlimit is 0, there is no speedlimit
+
+            //Play "You are going to fast" voice
+            textToSpeech.speak("You are going to fast",TextToSpeech.QUEUE_ADD,null,null);
+        }
+
+        //Reset responseFromServer String to nothing
+        responseFromServer = "";
     }
 
     //endregion
@@ -216,6 +273,29 @@ public class MyCommunicationsActivity extends AppCompatActivity {
         }
 
         return availableInput;
+    }
+
+    //endregion
+
+    //region onInit
+
+    @Override
+    public void onInit(int status) {
+        if(status == TextToSpeech.SUCCESS) {
+            int result = textToSpeech.setLanguage(Locale.US);
+            if (result == TextToSpeech.LANG_MISSING_DATA ||
+                    result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                System.out.println("ERROR: This Language is not supported");
+            }
+            else {
+                System.out.println("TextToSpeech initialized successfully");
+            }
+
+        }
+        else {
+            System.out.println("ERROR: Could not initialize TextToSpeech");
+        }
+
     }
 
     //endregion
