@@ -85,14 +85,20 @@ public class MyCommunicationsActivity extends AppCompatActivity {
                     while (available()>0){
 
                         char c = (char) read();
+
+                        if (responseFromServer.length() > 0 && c == 'v') {
+                            readSpeed();
+                            continue;
+                        }
+                        else if (c == 'v'){
+                            continue;
+                        }
                         responseFromServer += c;
 
                         System.out.println("String from server: " + responseFromServer);
 
-                        if (responseFromServer.length() > 0 && available() == 0) {
-                            readSpeed();
-                        }
-                        else if (responseFromServer.toLowerCase().contains("s") && available() == 0){
+
+                        if (responseFromServer.toLowerCase().contains("s") && available() == 0){
                             readSpeedSign();
                         }
                     }
