@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.UUID;
 
-public class MyCommunicationsActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
+public class MyCommunicationsActivity extends AppCompatActivity {
 
     //region Fields
 
@@ -37,7 +37,7 @@ public class MyCommunicationsActivity extends AppCompatActivity implements TextT
     private boolean mConnected = true;
     private static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
-    private TextToSpeech textToSpeech = new TextToSpeech(this, this);
+    //private TextToSpeech textToSpeech = new TextToSpeech(this, this);
 
     //endregion
 
@@ -226,7 +226,7 @@ public class MyCommunicationsActivity extends AppCompatActivity implements TextT
         if (Integer.parseInt(responseFromServer)>speedLimit && speedLimit!= 0){ //if speedlimit is 0, there is no speedlimit
 
             //Play "You are going to fast" voice
-            textToSpeech.speak("You are going to fast",TextToSpeech.QUEUE_ADD,null,null);
+            //textToSpeech.speak("You are going to fast",TextToSpeech.QUEUE_ADD,null,null);
         }
 
         //Reset responseFromServer String to nothing
@@ -278,7 +278,7 @@ public class MyCommunicationsActivity extends AppCompatActivity implements TextT
     //endregion
 
     //region onInit
-
+/*
     @Override
     public void onInit(int status) {
         if(status == TextToSpeech.SUCCESS) {
@@ -296,7 +296,7 @@ public class MyCommunicationsActivity extends AppCompatActivity implements TextT
             System.out.println("ERROR: Could not initialize TextToSpeech");
         }
 
-    }
+    }*/
 
     //endregion
 
