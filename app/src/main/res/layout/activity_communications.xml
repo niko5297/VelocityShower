@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Test"
+        android:text="@string/app_name"
         android:textSize="26sp"
         android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
@@ -16,6 +16,31 @@
         app:layout_constraintTop_toTopOf="parent"
         android:textAlignment="center"
         />
+
+    <TextView
+        android:id="@+id/velocityFromServer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/speedSign"
+        android:text="0"
+        android:textSize="26sp"
+        />
+
+    <ImageView
+        android:id="@+id/speedSign"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/velocityFromServer"
+        android:src="@drawable/nospeed"
+        />
+
+
 
 
 
