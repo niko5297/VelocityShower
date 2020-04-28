@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.UUID;
 
-public class MyCommunicationsActivity extends AppCompatActivity {
+public class MyCommunicationsActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
     //region Fields
 
@@ -37,7 +37,7 @@ public class MyCommunicationsActivity extends AppCompatActivity {
     private boolean mConnected = true;
     private static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
-    //private TextToSpeech textToSpeech = new TextToSpeech(this, this);
+    private TextToSpeech textToSpeech;
 
     //endregion
 
@@ -63,9 +63,20 @@ public class MyCommunicationsActivity extends AppCompatActivity {
 
         this.handler = new Handler();
 
+        textToSpeech = new TextToSpeech(getApplicationContext(), this);
+
         // Create a connection to this device by running asynctask
         messageListener.execute();
 
+    }
+
+    @Override
+    protected void onPause() {
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }
+        super.onPause();
     }
 
     @Override
@@ -232,7 +243,7 @@ public class MyCommunicationsActivity extends AppCompatActivity {
         if (Integer.parseInt(responseFromServer)>speedLimit && speedLimit!= 0){ //if speedlimit is 0, there is no speedlimit
 
             //Play "You are going to fast" voice
-            //textToSpeech.speak("You are going to fast",TextToSpeech.QUEUE_ADD,null,null);
+            textToSpeech.speak("You are going to fast",TextToSpeech.QUEUE_FLUSH,null,null);
         }
 
         //Reset responseFromServer String to nothing
@@ -284,25 +295,11 @@ public class MyCommunicationsActivity extends AppCompatActivity {
     //endregion
 
     //region onInit
-/*
+
     @Override
     public void onInit(int status) {
-        if(status == TextToSpeech.SUCCESS) {
-            int result = textToSpeech.setLanguage(Locale.US);
-            if (result == TextToSpeech.LANG_MISSING_DATA ||
-                    result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                System.out.println("ERROR: This Language is not supported");
-            }
-            else {
-                System.out.println("TextToSpeech initialized successfully");
-            }
-
-        }
-        else {
-            System.out.println("ERROR: Could not initialize TextToSpeech");
-        }
-
-    }*/
+        textToSpeech.setLanguage(Locale.ENGLISH);
+    }
 
     //endregion
 
