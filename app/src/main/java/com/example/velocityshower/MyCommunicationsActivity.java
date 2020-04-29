@@ -101,17 +101,20 @@ public class MyCommunicationsActivity extends AppCompatActivity implements TextT
                             readSpeed();
                             continue;
                         }
+                        else if (responseFromServer.length() > 0 && c == 's'){
+                            readSpeedSign();
+                            continue;
+                        }
                         else if (c == 'v'){
+                            continue;
+                        }
+                        else if (c == 's'){
                             continue;
                         }
                         responseFromServer += c;
 
                         System.out.println("String from server: " + responseFromServer);
 
-
-                        if (responseFromServer.toLowerCase().contains("s") && available() == 0){
-                            readSpeedSign();
-                        }
                     }
                     MyCommunicationsActivity.this.handler.postDelayed(readInputFromServer,1000);
 
@@ -189,12 +192,8 @@ public class MyCommunicationsActivity extends AppCompatActivity implements TextT
     }
 
     private void readSpeedSign(){
-        //Remove s from the string since it identifies that it is a speed sign
-        String localResponse = responseFromServer.toLowerCase().replace("s","");
-
-
         //Switch case from the value
-        switch (localResponse){
+        switch (responseFromServer){
 
             //Set imageresource accordingly
             case "50":
