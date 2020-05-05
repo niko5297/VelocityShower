@@ -41,10 +41,6 @@ public class MyCommunicationsActivity extends AppCompatActivity implements TextT
 
     //endregion
 
-    //TODO: Lav lottie animation mens den loader
-
-    //FIXME: s50 betyder at hastighedsgrænsen er 50 km/t
-
     //region Lifecycle
 
     @Override
